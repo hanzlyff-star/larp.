@@ -1,0 +1,839 @@
+-- ==============================================================================
+-- R6 ULTIMATE ACCESSORY MANAGER & PRESET OUTFIT SYSTEM (LANDSCAPE EDITION)
+-- DEVELOPED BY HANZ - OPTIMIZED FOR MOBILE LANDSCAPE & PC
+-- ==============================================================================
+
+local Players = game:GetService("Players")
+local UserInputService = game:GetService("UserInputService")
+local InsertService = game:GetService("InsertService")
+local HttpService = game:GetService("HttpService")
+local TweenService = game:GetService("TweenService")
+
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+if PlayerGui:FindFirstChild("UltimateAccessoryGuiLandscape") then
+    PlayerGui.UltimateAccessoryGuiLandscape:Destroy()
+end
+
+local PRESET_FILE_NAME = "R6_LandscapePresets.json"
+
+local ScreenGui = Instance.new("ScreenGui")
+ScreenGui.Name = "UltimateAccessoryGuiLandscape"
+ScreenGui.ResetOnSpawn = false
+ScreenGui.Parent = PlayerGui
+
+-- ==============================================================================
+-- LOADING SCREEN OVERLAY (BY HANZ)
+-- ==============================================================================
+local LoadingOverlay = Instance.new("Frame")
+LoadingOverlay.Name = "LoadingOverlay"
+LoadingOverlay.Size = UDim2.new(1, 0, 1, 0)
+LoadingOverlay.BackgroundColor3 = Color3.fromRGB(10, 10, 14)
+LoadingOverlay.BorderSizePixel = 0
+LoadingOverlay.ZIndex = 10
+LoadingOverlay.Parent = ScreenGui
+
+local LoadingCorner = Instance.new("UICorner")
+LoadingCorner.CornerRadius = UDim.new(0, 12)
+LoadingCorner.Parent = LoadingOverlay
+
+local LoadingLabel = Instance.new("TextLabel")
+LoadingLabel.Size = UDim2.new(0, 400, 0, 50)
+LoadingLabel.Position = UDim2.new(0.5, -200, 0.5, -35)
+LoadingLabel.BackgroundTransparency = 1
+LoadingLabel.Text = "MEMUAT R6 ULTIMATE MANAGER..."
+LoadingLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+LoadingLabel.TextSize = 14
+LoadingLabel.Font = Enum.Font.GothamBold
+LoadingLabel.ZIndex = 11
+LoadingLabel.Parent = LoadingOverlay
+
+local CreditLabel = Instance.new("TextLabel")
+CreditLabel.Size = UDim2.new(0, 400, 0, 30)
+CreditLabel.Position = UDim2.new(0.5, -200, 0.5, 10)
+CreditLabel.BackgroundTransparency = 1
+CreditLabel.Text = "CREATED BY HANZ"
+CreditLabel.TextColor3 = Color3.fromRGB(80, 255, 120)
+CreditLabel.TextSize = 12
+CreditLabel.Font = Enum.Font.GothamSemibold
+CreditLabel.ZIndex = 11
+CreditLabel.Parent = LoadingOverlay
+
+-- ==============================================================================
+-- MAIN LANDSCAPE FRAME
+-- ==============================================================================
+local MainFrame = Instance.new("Frame")
+MainFrame.Name = "MainFrame"
+MainFrame.Size = UDim2.new(0, 560, 0, 280)
+MainFrame.Position = UDim2.new(0.5, -280, 0.5, -140)
+MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
+MainFrame.BorderColor3 = Color3.fromRGB(60, 120, 255)
+MainFrame.BorderSizePixel = 1
+MainFrame.Active = true
+MainFrame.ClipsDescendants = true
+MainFrame.Visible = false
+MainFrame.Parent = ScreenGui
+
+local MainCorner = Instance.new("UICorner")
+MainCorner.CornerRadius = UDim.new(0, 10)
+MainCorner.Parent = MainFrame
+
+local TitleBar = Instance.new("Frame")
+TitleBar.Name = "TitleBar"
+TitleBar.Size = UDim2.new(1, 0, 0, 30)
+TitleBar.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
+TitleBar.BorderSizePixel = 0
+TitleBar.Parent = MainFrame
+
+local TitleCorner = Instance.new("UICorner")
+TitleCorner.CornerRadius = UDim.new(0, 10)
+TitleCorner.Parent = TitleBar
+
+local TitleLabel = Instance.new("TextLabel")
+TitleLabel.Size = UDim2.new(1, -40, 1, 0)
+TitleLabel.Position = UDim2.new(0, 12, 0, 0)
+TitleLabel.BackgroundTransparency = 1
+TitleLabel.Text = "R6 ULTIMATE MANAGER | BY HANZ"
+TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.TextSize = 11
+TitleLabel.Font = Enum.Font.GothamBold
+TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+TitleLabel.Parent = TitleBar
+
+local MinimizeBtn = Instance.new("TextButton")
+MinimizeBtn.Size = UDim2.new(0, 24, 0, 24)
+MinimizeBtn.Position = UDim2.new(1, -28, 0, 3)
+MinimizeBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+MinimizeBtn.BorderColor3 = Color3.fromRGB(70, 130, 255)
+MinimizeBtn.BorderSizePixel = 1
+MinimizeBtn.Text = "-"
+MinimizeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+MinimizeBtn.TextSize = 14
+MinimizeBtn.Font = Enum.Font.GothamBold
+MinimizeBtn.Parent = TitleBar
+
+local MinCorner = Instance.new("UICorner")
+MinCorner.CornerRadius = UDim.new(0, 6)
+MinCorner.Parent = MinimizeBtn
+
+local ContentFrame = Instance.new("Frame")
+ContentFrame.Name = "ContentFrame"
+ContentFrame.Size = UDim2.new(1, 0, 1, -30)
+ContentFrame.Position = UDim2.new(0, 0, 0, 30)
+ContentFrame.BackgroundTransparency = 1
+ContentFrame.Parent = MainFrame
+
+-- ==============================================================================
+-- LANDSCAPE SPLIT LAYOUT: LEFT COLUMN (CATALOG & PRESETS)
+-- ==============================================================================
+local LeftColumn = Instance.new("Frame")
+LeftColumn.Name = "LeftColumn"
+LeftColumn.Size = UDim2.new(0, 265, 1, -10)
+LeftColumn.Position = UDim2.new(0, 8, 0, 5)
+LeftColumn.BackgroundTransparency = 1
+LeftColumn.Parent = ContentFrame
+
+-- Official Catalog Section
+local CatalogHeader = Instance.new("TextLabel")
+CatalogHeader.Size = UDim2.new(1, 0, 0, 15)
+CatalogHeader.BackgroundTransparency = "1"
+CatalogHeader.Text = "--- KATALOG RESMI (KLIK) ---"
+CatalogHeader.TextColor3 = Color3.fromRGB(180, 180, 200)
+CatalogHeader.TextSize = 9
+CatalogHeader.Font = Enum.Font.GothamBold
+CatalogHeader.Parent = LeftColumn
+
+local CatalogScroll = Instance.new("ScrollingFrame")
+CatalogScroll.Size = UDim2.new(1, 0, 0, 105)
+CatalogScroll.Position = UDim2.new(0, 0, 0, 18)
+CatalogScroll.BackgroundColor3 = Color3.fromRGB(10, 10, 14)
+CatalogScroll.BorderColor3 = Color3.fromRGB(40, 40, 60)
+CatalogScroll.BorderSizePixel = 1
+CatalogScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+CatalogScroll.ScrollBarThickness = 3
+CatalogScroll.Parent = LeftColumn
+
+local CatalogUIList = Instance.new("UIListLayout")
+CatalogUIList.SortOrder = Enum.SortOrder.LayoutOrder
+CatalogUIList.Padding = UDim.new(0, 2)
+CatalogUIList.Parent = CatalogScroll
+
+-- Preset Section
+local PresetHeader = Instance.new("TextLabel")
+PresetHeader.Size = UDim2.new(1, 0, 0, 15)
+PresetHeader.Position = UDim2.new(0, 0, 0, 128)
+PresetHeader.BackgroundTransparency = 1
+PresetHeader.Text = "--- PRESET OUTFIT LOKAL ---"
+PresetHeader.TextColor3 = Color3.fromRGB(180, 180, 200)
+PresetHeader.TextSize = 9
+PresetHeader.Font = Enum.Font.GothamBold
+PresetHeader.Parent = LeftColumn
+
+local PresetScroll = Instance.new("ScrollingFrame")
+PresetScroll.Size = UDim2.new(1, 0, 0, 75)
+PresetScroll.Position = UDim2.new(0, 0, 0, 146)
+PresetScroll.BackgroundColor3 = Color3.fromRGB(10, 10, 14)
+PresetScroll.BorderColor3 = Color3.fromRGB(40, 40, 60)
+PresetScroll.BorderSizePixel = 1
+PresetScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+PresetScroll.ScrollBarThickness = 3
+PresetScroll.Parent = LeftColumn
+
+local PresetUIList = Instance.new("UIListLayout")
+PresetUIList.SortOrder = Enum.SortOrder.LayoutOrder
+PresetUIList.Padding = UDim.new(0, 2)
+PresetUIList.Parent = PresetScroll
+
+-- ==============================================================================
+-- LANDSCAPE SPLIT LAYOUT: RIGHT COLUMN (CONTROLS & ADJUSTMENTS)
+-- ==============================================================================
+local RightColumn = Instance.new("Frame")
+RightColumn.Name = "RightColumn"
+RightColumn.Size = UDim2.new(0, 265, 1, -10)
+RightColumn.Position = UDim2.new(0, 285, 0, 5)
+RightColumn.BackgroundTransparency = 1
+RightColumn.Parent = ContentFrame
+
+-- Headless Toggle
+local HeadlessBtn = Instance.new("TextButton")
+HeadlessBtn.Size = UDim2.new(1, 0, 0, 22)
+HeadlessBtn.Position = UDim2.new(0, 0, 0, 0)
+HeadlessBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+HeadlessBtn.BorderColor3 = Color3.fromRGB(60, 120, 255)
+HeadlessBtn.BorderSizePixel = 1
+HeadlessBtn.Text = "HEADLESS: OFF"
+HeadlessBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
+HeadlessBtn.TextSize = 10
+HeadlessBtn.Font = Enum.Font.GothamSemibold
+HeadlessBtn.Parent = RightColumn
+
+local CornerHeadless = Instance.new("UICorner")
+CornerHeadless.CornerRadius = UDim.new(0, 4)
+CornerHeadless.Parent = HeadlessBtn
+
+-- Manual ID Input & Load
+local IdTextBox = Instance.new("TextBox")
+IdTextBox.Size = UDim2.new(0.68, 0, 0, 22)
+IdTextBox.Position = UDim2.new(0, 0, 0, 26)
+IdTextBox.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+IdTextBox.BorderColor3 = Color3.fromRGB(80, 80, 110)
+IdTextBox.BorderSizePixel = 1
+IdTextBox.PlaceholderText = "ID Aksesoris..."
+IdTextBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 140)
+IdTextBox.Text = ""
+IdTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+IdTextBox.TextSize = 10
+IdTextBox.Font = Enum.Font.GothamMedium
+IdTextBox.Parent = RightColumn
+
+local CornerId = Instance.new("UICorner")
+CornerId.CornerRadius = UDim.new(0, 4)
+CornerId.Parent = IdTextBox
+
+local AddAccessoryBtn = Instance.new("TextButton")
+AddAccessoryBtn.Size = UDim2.new(0.29, 0, 0, 22)
+AddAccessoryBtn.Position = UDim2.new(0.71, 0, 0, 26)
+AddAccessoryBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+AddAccessoryBtn.BorderColor3 = Color3.fromRGB(60, 120, 255)
+AddAccessoryBtn.BorderSizePixel = 1
+AddAccessoryBtn.Text = "LOAD"
+AddAccessoryBtn.TextColor3 = Color3.fromRGB(80, 255, 120)
+AddAccessoryBtn.TextSize = 10
+AddAccessoryBtn.Font = Enum.Font.GothamBold
+AddAccessoryBtn.Parent = RightColumn
+
+local CornerLoad = Instance.new("UICorner")
+CornerLoad.CornerRadius = UDim.new(0, 4)
+CornerLoad.Parent = AddAccessoryBtn
+
+-- Preset Name Input & Save Set Button
+local PresetNameBox = Instance.new("TextBox")
+PresetNameBox.Size = UDim2.new(0.68, 0, 0, 22)
+PresetNameBox.Position = UDim2.new(0, 0, 0, 52)
+PresetNameBox.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
+PresetNameBox.BorderColor3 = Color3.fromRGB(80, 80, 110)
+PresetNameBox.BorderSizePixel = 1
+PresetNameBox.PlaceholderText = "Nama Preset..."
+PresetNameBox.PlaceholderColor3 = Color3.fromRGB(120, 120, 140)
+PresetNameBox.Text = ""
+PresetNameBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+PresetNameBox.TextSize = 10
+PresetNameBox.Font = Enum.Font.GothamMedium
+PresetNameBox.Parent = RightColumn
+
+local CornerPresetBox = Instance.new("UICorner")
+CornerPresetBox.CornerRadius = UDim.new(0, 4)
+CornerPresetBox.Parent = PresetNameBox
+
+local SavePresetBtn = Instance.new("TextButton")
+SavePresetBtn.Size = UDim2.new(0.29, 0, 0, 22)
+SavePresetBtn.Position = UDim2.new(0.71, 0, 0, 52)
+SavePresetBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+SavePresetBtn.BorderColor3 = Color3.fromRGB(80, 255, 120)
+SavePresetBtn.BorderSizePixel = 1
+SavePresetBtn.Text = "SIMPAN"
+SavePresetBtn.TextColor3 = Color3.fromRGB(80, 255, 120)
+SavePresetBtn.TextSize = 10
+SavePresetBtn.Font = Enum.Font.GothamBold
+SavePresetBtn.Parent = RightColumn
+
+local CornerSave = Instance.new("UICorner")
+CornerSave.CornerRadius = UDim.new(0, 4)
+CornerSave.Parent = SavePresetBtn
+
+-- Status Label & Navigation
+local AccStatusLabel = Instance.new("TextLabel")
+AccStatusLabel.Size = UDim2.new(1, 0, 0, 20)
+AccStatusLabel.Position = UDim2.new(0, 0, 0, 78)
+AccStatusLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
+AccStatusLabel.BorderColor3 = Color3.fromRGB(50, 50, 70)
+AccStatusLabel.BorderSizePixel = 1
+AccStatusLabel.Text = "Aktif: [ Belum dipilih ]"
+AccStatusLabel.TextColor3 = Color3.fromRGB(255, 220, 100)
+AccStatusLabel.TextSize = 10
+AccStatusLabel.Font = Enum.Font.GothamMedium
+AccStatusLabel.Parent = RightColumn
+
+local CornerStatus = Instance.new("UICorner")
+CornerStatus.CornerRadius = UDim.new(0, 4)
+CornerStatus.Parent = AccStatusLabel
+
+local PrevAccBtn = Instance.new("TextButton")
+PrevAccBtn.Size = UDim2.new(0.48, 0, 0, 20)
+PrevAccBtn.Position = UDim2.new(0, 0, 0, 102)
+PrevAccBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+PrevAccBtn.BorderColor3 = Color3.fromRGB(70, 130, 255)
+PrevAccBtn.BorderSizePixel = 1
+PrevAccBtn.Text = "< PREV ACC"
+PrevAccBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+PrevAccBtn.TextSize = 9
+PrevAccBtn.Font = Enum.Font.GothamBold
+PrevAccBtn.Parent = RightColumn
+
+local CornerPrev = Instance.new("UICorner")
+CornerPrev.CornerRadius = UDim.new(0, 4)
+CornerPrev.Parent = PrevAccBtn
+
+local NextAccBtn = Instance.new("TextButton")
+NextAccBtn.Size = UDim2.new(0.48, 0, 0, 20)
+NextAccBtn.Position = UDim2.new(0.52, 0, 0, 102)
+NextAccBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
+NextAccBtn.BorderColor3 = Color3.fromRGB(70, 130, 255)
+NextAccBtn.BorderSizePixel = 1
+NextAccBtn.Text = "NEXT ACC >"
+NextAccBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+NextAccBtn.TextSize = 9
+NextAccBtn.Font = Enum.Font.GothamBold
+NextAccBtn.Parent = RightColumn
+
+local CornerNext = Instance.new("UICorner")
+CornerNext.CornerRadius = UDim.new(0, 4)
+CornerNext.Parent = NextAccBtn
+
+-- Position & Scale Matrix Buttons
+local function createAdjButton(posX, posY, sizeX, sizeY, text, color)
+    local btn = Instance.new("TextButton")
+    btn.Size = sizeX
+    btn.Position = posX
+    btn.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
+    btn.BorderColor3 = color
+    btn.BorderSizePixel = 1
+    btn.Text = text
+    btn.TextColor3 = color
+    btn.TextSize = 9
+    btn.Font = Enum.Font.GothamBold
+    btn.Parent = RightColumn
+    local c = Instance.new("UICorner")
+    c.CornerRadius = UDim.new(0, 4)
+    c.Parent = btn
+    return btn
+end
+
+local XPlusBtn = createAdjButton(UDim2.new(0, 0, 0, 126), UDim2.new(0, 0, 0, 20), UDim2.new(0.31, 0, 0, 20), "X +0.1", Color3.fromRGB(100, 200, 255))
+local XMinBtn  = createAdjButton(UDim2.new(0.34, 0, 0, 126), UDim2.new(0, 0, 0, 20), UDim2.new(0.31, 0, 0, 20), "X -0.1", Color3.fromRGB(100, 200, 255))
+local ScaleUpBtn = createAdjButton(UDim2.new(0.68, 0, 0, 126), UDim2.new(0, 0, 0, 20), UDim2.new(0.32, 0, 0, 20), "SCALE +", Color3.fromRGB(255, 100, 255))
+
+local YPlusBtn = createAdjButton(UDim2.new(0, 0, 0, 149), UDim2.new(0, 0, 0, 20), UDim2.new(0.31, 0, 0, 20), "Y +0.1", Color3.fromRGB(80, 255, 120))
+local YMinBtn  = createAdjButton(UDim2.new(0.34, 0, 0, 149), UDim2.new(0, 0, 0, 20), UDim2.new(0.31, 0, 0, 20), "Y -0.1", Color3.fromRGB(80, 255, 120))
+local ScaleDownBtn = createAdjButton(UDim2.new(0.68, 0, 0, 149), UDim2.new(0, 0, 0, 20), UDim2.new(0.32, 0, 0, 20), "SCALE -", Color3.fromRGB(255, 100, 255))
+
+local ZPlusBtn = createAdjButton(UDim2.new(0, 0, 0, 172), UDim2.new(0, 0, 0, 20), UDim2.new(0.31, 0, 0, 20), "Z +0.1", Color3.fromRGB(255, 180, 80))
+local ZMinBtn  = createAdjButton(UDim2.new(0.34, 0, 0, 172), UDim2.new(0, 0, 0, 20), UDim2.new(0.31, 0, 0, 20), "Z -0.1", Color3.fromRGB(255, 180, 80))
+local DeleteAccBtn = createAdjButton(UDim2.new(0.68, 0, 0, 172), UDim2.new(0, 0, 0, 20), UDim2.new(0.32, 0, 0, 20), "HAPUS", Color3.fromRGB(255, 60, 60))
+
+-- ==============================================================================
+-- DRAGGING & MINIMIZE CONTROLLER
+-- ==============================================================================
+local dragging, dragInput, dragStart, startPos
+TitleBar.InputBegan:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        dragging = true
+        dragStart = input.Position
+        startPos = MainFrame.Position
+        input.Changed:Connect(function()
+            if input.UserInputState == Enum.UserInputState.End then dragging = false end
+        end)
+    end
+end)
+TitleBar.InputChanged:Connect(function(input)
+    if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        dragInput = input
+    end
+end)
+UserInputService.InputChanged:Connect(function(input)
+    if input == dragInput and dragging then
+        local delta = input.Position - dragStart
+        MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+end)
+
+local isMinimized = false
+MinimizeBtn.MouseButton1Click:Connect(function()
+    isMinimized = not isMinimized
+    if isMinimized then
+        ContentFrame.Visible = false
+        MainFrame.Size = UDim2.new(0, 560, 0, 30)
+        MinimizeBtn.Text = "+"
+    else
+        ContentFrame.Visible = true
+        MainFrame.Size = UDim2.new(0, 560, 0, 280)
+        MinimizeBtn.Text = "-"
+    end
+end)
+
+-- ==============================================================================
+-- LOGIC ENGINE: CATALOG & ASSET MANAGEMENT
+-- ==============================================================================
+local HeadlessActive = false
+local activeAccessories = {}
+local savedPresets = {}
+local selectedIndex = 0
+
+-- Official Roblox Catalog Asset IDs (Verified & Correct)
+local officialCatalogItems = {
+    {name = "8-Bit Royal Crown", id = 10159600649},
+    {name = "8-Bit HP Bar", id = 10159610478},
+    {name = "8-Bit Tabby Cat", id = 10159617728},
+    {name = "Fiery Horns Netherworld", id = 215718515},
+    {name = "Frozen Horns Frigid", id = 74891470},
+    {name = "Poisoned Horns Toxic", id = 1744060292}
+}
+
+local function updateStatusUI()
+    if #activeAccessories == 0 then
+        selectedIndex = 0
+        AccStatusLabel.Text = "Aktif: [ Kosong ]"
+    else
+        if selectedIndex < 1 then selectedIndex = 1 end
+        if selectedIndex > #activeAccessories then selectedIndex = #activeAccessories end
+        local current = activeAccessories[selectedIndex]
+        AccStatusLabel.Text = "No." .. selectedIndex .. " | ID: " .. current.id
+    end
+end
+
+local function setHeadless(state)
+    local char = LocalPlayer.Character
+    if not char then return end
+    local head = char:FindFirstChild("Head")
+    if not head then return end
+    local face = head:FindFirstChild("face")
+    local mesh = head:FindFirstChildOfClass("SpecialMesh")
+    if state then
+        head.Transparency = 1
+        if face then face.Transparency = 1 end
+        if mesh then mesh.Scale = Vector3.new(0, 0, 0) end
+    else
+        head.Transparency = 0
+        if face then face.Transparency = 0 end
+        if mesh then mesh.Scale = Vector3.new(1.25, 1.25, 1.25) end
+    end
+end
+
+local function spawnAccessoryWithData(assetId, c0Table, scaleTable)
+    local char = LocalPlayer.Character
+    if not char then return end
+    local head = char:FindFirstChild("Head")
+    if not head then return end
+
+    pcall(function()
+        local assetModel = nil
+        local success, err = pcall(function()
+            assetModel = InsertService:LoadAsset(assetId)
+        end)
+        if not success or not assetModel then
+            assetModel = game:GetObjects("rbxassetid://" .. tostring(assetId))[1]
+        end
+
+        if assetModel then
+            for _, item in pairs(assetModel:GetChildren()) do
+                if item:IsA("Accessory") or item:IsA("Hat") then
+                    item.Parent = char
+                    local handle = item:FindFirstChild("Handle")
+                    if handle then
+                        local weld = handle:FindFirstChildOfClass("Weld") or handle:FindFirstChildOfClass("WeldConstraint")
+                        if c0Table and weld and weld:IsA("Weld") then
+                            weld.C0 = CFrame.new(table.unpack(c0Table))
+                        end
+                        if scaleTable then
+                            local mesh = handle:FindFirstChildOfClass("SpecialMesh")
+                            if mesh then
+                                mesh.Scale = Vector3.new(table.unpack(scaleTable))
+                            elseif handle:IsA("MeshPart") then
+                                handle.Size = Vector3.new(table.unpack(scaleTable))
+                            end
+                        end
+                        table.insert(activeAccessories, {id = tostring(assetId), model = item, part = handle, weld = weld})
+                    end
+                elseif item:IsA("BasePart") or item:IsA("MeshPart") then
+                    item.CanCollide = false
+                    item.Parent = char
+                    local weld = Instance.new("Weld")
+                    weld.Part0 = head
+                    weld.Part1 = item
+                    weld.C0 = c0Table and CFrame.new(table.unpack(c0Table)) or CFrame.new(0, 0.5, 0)
+                    weld.Parent = item
+                    if scaleTable and item:IsA("MeshPart") then
+                        item.Size = Vector3.new(table.unpack(scaleTable))
+                    end
+                    table.insert(activeAccessories, {id = tostring(assetId), model = item, part = item, weld = weld})
+                elseif item:IsA("Model") then
+                    for _, child in pairs(item:GetChildren()) do
+                        if child:IsA("Accessory") or child:IsA("Hat") then
+                            child.Parent = char
+                            local handle = child:FindFirstChild("Handle")
+                            table.insert(activeAccessories, {id = tostring(assetId), model = child, part = handle})
+                        elseif child:IsA("BasePart") or child:IsA("MeshPart") then
+                            child.CanCollide = false
+                            child.Parent = char
+                            local weld = Instance.new("Weld")
+                            weld.Part0 = head
+                            weld.Part1 = child
+                            weld.C0 = c0Table and CFrame.new(table.unpack(c0Table)) or CFrame.new(0, 0.5, 0)
+                            weld.Parent = child
+                            table.insert(activeAccessories, {id = tostring(assetId), model = child, part = child, weld = weld})
+                        end
+                    end
+                end
+            end
+        end
+    end)
+    selectedIndex = #activeAccessories
+    updateStatusUI()
+end
+
+local function clearAllActiveAccessories()
+    for _, acc in ipairs(activeAccessories) do
+        if acc.model then
+            pcall(function()
+                acc.model:ClearAllChildren()
+                acc.model:Destroy()
+            end)
+        end
+    end
+    activeAccessories = {}
+    selectedIndex = 0
+    updateStatusUI()
+end
+
+local function savePresetsToDisk()
+    pcall(function()
+        if writefile then
+            writefile(PRESET_FILE_NAME, HttpService:JSONEncode(savedPresets))
+        end
+    end)
+end
+
+local function refreshPresetListUI()
+    for _, child in pairs(PresetScroll:GetChildren()) do
+        if child:IsA("Frame") then child:Destroy() end
+    end
+
+    local count = 0
+    for presetName, presetData in pairs(savedPresets) do
+        count = count + 1
+        local itemFrame = Instance.new("Frame")
+        itemFrame.Size = UDim2.new(1, -6, 0, 22)
+        itemFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
+        itemFrame.BorderSizePixel = 0
+        itemFrame.Parent = PresetScroll
+
+        local c = Instance.new("UICorner")
+        c.CornerRadius = UDim.new(0, 4)
+        c.Parent = itemFrame
+
+        local loadBtn = Instance.new("TextButton")
+        loadBtn.Size = UDim2.new(0.68, 0, 1, 0)
+        loadBtn.BackgroundTransparency = 1
+        loadBtn.Text = "  " .. presetName
+        loadBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+        loadBtn.TextSize = 10
+        loadBtn.Font = Enum.Font.GothamMedium
+        loadBtn.TextXAlignment = Enum.TextXAlignment.Left
+        loadBtn.Parent = itemFrame
+
+        loadBtn.MouseButton1Click:Connect(function()
+            clearAllActiveAccessories()
+            for _, accInfo in ipairs(presetData) do
+                spawnAccessoryWithData(tonumber(accInfo.id), accInfo.c0, accInfo.scale)
+            end
+        end)
+
+        local delBtn = Instance.new("TextButton")
+        delBtn.Size = UDim2.new(0.28, 0, 0.8, 0)
+        delBtn.Position = UDim2.new(0.70, 0, 0.1, 0)
+        delBtn.BackgroundColor3 = Color3.fromRGB(50, 20, 20)
+        delBtn.BorderSizePixel = 0
+        delBtn.Text = "HAPUS"
+        delBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
+        delBtn.TextSize = 9
+        delBtn.Font = Enum.Font.GothamBold
+        delBtn.Parent = itemFrame
+
+        local dc = Instance.new("UICorner")
+        dc.CornerRadius = UDim.new(0, 3)
+        dc.Parent = delBtn
+
+        delBtn.MouseButton1Click:Connect(function()
+            savedPresets[presetName] = nil
+            savePresetsToDisk()
+            refreshPresetListUI()
+        end)
+    end
+
+    PresetScroll.CanvasSize = UDim2.new(0, 0, 0, count * 24)
+end
+
+local function refreshCatalogUI()
+    for _, child in pairs(CatalogScroll:GetChildren()) do
+        if child:IsA("Frame") then child:Destroy() end
+    end
+
+    local count = 0
+    for _, item in ipairs(officialCatalogItems) do
+        count = count + 1
+        local itemFrame = Instance.new("Frame")
+        itemFrame.Size = UDim2.new(1, -6, 0, 22)
+        itemFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
+        itemFrame.BorderSizePixel = 0
+        itemFrame.Parent = CatalogScroll
+
+        local c = Instance.new("UICorner")
+        c.CornerRadius = UDim.new(0, 4)
+        c.Parent = itemFrame
+
+        local loadBtn = Instance.new("TextButton")
+        loadBtn.Size = UDim2.new(1, 0, 1, 0)
+        loadBtn.BackgroundTransparency = 1
+        loadBtn.Text = "  " .. item.name
+        loadBtn.TextColor3 = Color3.fromRGB(255, 220, 100)
+        loadBtn.TextSize = 10
+        loadBtn.Font = Enum.Font.GothamMedium
+        loadBtn.TextXAlignment = Enum.TextXAlignment.Left
+        loadBtn.Parent = itemFrame
+
+        loadBtn.MouseButton1Click:Connect(function()
+            spawnAccessoryWithData(item.id, nil, nil)
+        end)
+    end
+
+    CatalogScroll.CanvasSize = UDim2.new(0, 0, 0, count * 24)
+end
+
+local function loadPresetsFromDisk()
+    pcall(function()
+        if readfile and isfile and isfile(PRESET_FILE_NAME) then
+            local data = readfile(PRESET_FILE_NAME)
+            local decoded = HttpService:JSONDecode(data)
+            if decoded and type(decoded) == "table" then
+                savedPresets = decoded
+            end
+        end
+    end)
+    refreshPresetListUI()
+end
+
+HeadlessBtn.MouseButton1Click:Connect(function()
+    HeadlessActive = not HeadlessActive
+    setHeadless(HeadlessActive)
+    HeadlessBtn.Text = HeadlessActive and "HEADLESS: ON" or "HEADLESS: OFF"
+    HeadlessBtn.TextColor3 = HeadlessActive and Color3.fromRGB(80, 255, 120) or Color3.fromRGB(255, 80, 80)
+end)
+
+AddAccessoryBtn.MouseButton1Click:Connect(function()
+    local textId = IdTextBox.Text
+    if textId ~= "" and tonumber(textId) then
+        spawnAccessoryWithData(tonumber(textId), nil, nil)
+        IdTextBox.Text = ""
+    end
+end)
+
+SavePresetBtn.MouseButton1Click:Connect(function()
+    local pName = PresetNameBox.Text
+    if pName ~= "" and #activeAccessories > 0 then
+        local presetData = {}
+        for _, acc in ipairs(activeAccessories) do
+            local c0Comp = acc.weld and {acc.weld.C0:GetComponents()} or {0, 0.5, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1}
+            local scaleComp = nil
+            if acc.part then
+                local mesh = acc.part:FindFirstChildOfClass("SpecialMesh")
+                if mesh then
+                    scaleComp = {mesh.Scale.X, mesh.Scale.Y, mesh.Scale.Z}
+                elseif acc.part:IsA("MeshPart") then
+                    scaleComp = {acc.part.Size.X, acc.part.Size.Y, acc.part.Size.Z}
+                end
+            end
+            table.insert(presetData, {
+                id = acc.id,
+                c0 = c0Comp,
+                scale = scaleComp
+            })
+        end
+        savedPresets[pName] = presetData
+        savePresetsToDisk()
+        refreshPresetListUI()
+        PresetNameBox.Text = ""
+    end
+end)
+
+PrevAccBtn.MouseButton1Click:Connect(function()
+    if #activeAccessories > 0 then
+        selectedIndex = selectedIndex - 1
+        if selectedIndex < 1 then selectedIndex = #activeAccessories end
+        updateStatusUI()
+    end
+end)
+
+NextAccBtn.MouseButton1Click:Connect(function()
+    if #activeAccessories > 0 then
+        selectedIndex = selectedIndex + 1
+        if selectedIndex > #activeAccessories then selectedIndex = 1 end
+        updateStatusUI()
+    end
+end)
+
+XPlusBtn.MouseButton1Click:Connect(function()
+    if selectedIndex > 0 and activeAccessories[selectedIndex] then
+        local entry = activeAccessories[selectedIndex]
+        if entry.weld then entry.weld.C0 = entry.weld.C0 * CFrame.new(0.1, 0, 0) end
+    end
+end)
+
+XMinBtn.MouseButton1Click:Connect(function()
+    if selectedIndex > 0 and activeAccessories[selectedIndex] then
+        local entry = activeAccessories[selectedIndex]
+        if entry.weld then entry.weld.C0 = entry.weld.C0 * CFrame.new(-0.1, 0, 0) end
+    end
+end)
+
+YPlusBtn.MouseButton1Click:Connect(function()
+    if selectedIndex > 0 and activeAccessories[selectedIndex] then
+        local entry = activeAccessories[selectedIndex]
+        if entry.weld then entry.weld.C0 = entry.weld.C0 * CFrame.new(0, 0.1, 0) end
+    end
+end)
+
+YMinBtn.MouseButton1Click:Connect(function()
+    if selectedIndex > 0 and activeAccessories[selectedIndex] then
+        local entry = activeAccessories[selectedIndex]
+        if entry.weld then entry.weld.C0 = entry.weld.C0 * CFrame.new(0, -0.1, 0) end
+    end
+end)
+
+ZPlusBtn.MouseButton1Click:Connect(function()
+    if selectedIndex > 0 and activeAccessories[selectedIndex] then
+        local entry = activeAccessories[selectedIndex]
+        if entry.weld then entry.weld.C0 = entry.weld.C0 * CFrame.new(0, 0, 0.1) end
+    end
+end)
+
+ZMinBtn.MouseButton1Click:Connect(function()
+    if selectedIndex > 0 and activeAccessories[selectedIndex] then
+        local entry = activeAccessories[selectedIndex]
+        if entry.weld then entry.weld.C0 = entry.weld.C0 * CFrame.new(0, 0, -0.1) end
+    end
+end)
+
+ScaleUpBtn.MouseButton1Click:Connect(function()
+    if selectedIndex > 0 and activeAccessories[selectedIndex] then
+        local entry = activeAccessories[selectedIndex]
+        if entry.part then
+            local mesh = entry.part:FindFirstChildOfClass("SpecialMesh")
+            if mesh then mesh.Scale = mesh.Scale * 1.1 elseif entry.part:IsA("MeshPart") then entry.part.Size = entry.part.Size * 1.1 end
+        end
+    end
+end)
+
+ScaleDownBtn.MouseButton1Click:Connect(function()
+    if selectedIndex > 0 and activeAccessories[selectedIndex] then
+        local entry = activeAccessories[selectedIndex]
+        if entry.part then
+            local mesh = entry.part:FindFirstChildOfClass("SpecialMesh")
+            if mesh then mesh.Scale = mesh.Scale * 0.9 elseif entry.part:IsA("MeshPart") then entry.part.Size = entry.part.Size * 0.9 end
+        end
+    end
+end)
+
+DeleteAccBtn.MouseButton1Click:Connect(function()
+    if selectedIndex > 0 and activeAccessories[selectedIndex] then
+        local entry = activeAccessories[selectedIndex]
+        if entry.model then
+            pcall(function()
+                entry.model:ClearAllChildren()
+                entry.model:Destroy()
+            end)
+        end
+        table.remove(activeAccessories, selectedIndex)
+        if selectedIndex > #activeAccessories then selectedIndex = #activeAccessories end
+        updateStatusUI()
+    end
+end)
+
+LocalPlayer.CharacterAdded:Connect(function(newChar)
+    task.wait(1.2)
+    if HeadlessActive then
+        setHeadless(true)
+    end
+    
+    local snapshot = {}
+    for _, acc in ipairs(activeAccessories) do
+        local c0Comp = acc.weld and {acc.weld.C0:GetComponents()} or nil
+        local scaleComp = nil
+        if acc.part then
+            local mesh = acc.part:FindFirstChildOfClass("SpecialMesh")
+            if mesh then
+                scaleComp = {mesh.Scale.X, mesh.Scale.Y, mesh.Scale.Z}
+            elseif acc.part:IsA("MeshPart") then
+                scaleComp = {acc.part.Size.X, acc.part.Size.Y, acc.part.Size.Z}
+            end
+        end
+        table.insert(snapshot, {id = acc.id, c0 = c0Comp, scale = scaleComp})
+    end
+    
+    activeAccessories = {}
+    selectedIndex = 0
+    updateStatusUI()
+    
+    for _, item in ipairs(snapshot) do
+        spawnAccessoryWithData(tonumber(item.id), item.c0, item.scale)
+    end
+end)
+
+loadPresetsFromDisk()
+refreshCatalogUI()
+
+-- Loading screen sequence animation
+task.spawn(function()
+    task.wait(1.5)
+    local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+    local tween1 = TweenService:Create(LoadingOverlay, tweenInfo, {BackgroundTransparency = 1})
+    local tween2 = TweenService:Create(LoadingLabel, tweenInfo, {TextTransparency = 1})
+    local tween3 = TweenService:Create(CreditLabel, tweenInfo, {TextTransparency = 1})
+    tween1:Play()
+    tween2:Play()
+    tween3:Play()
+    tween1.Completed:Connect(function()
+        LoadingOverlay:Destroy()
+        MainFrame.Visible = true
+    end)
+end)
