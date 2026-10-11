@@ -1,5 +1,5 @@
 -- ==============================================================================
--- R6 ULTIMATE ACCESSORY MANAGER & PRESET OUTFIT SYSTEM (LANDSCAPE EDITION)
+-- R6 ULTIMATE ACCESSORY MANAGER & PRESET OUTFIT SYSTEM (FAST LANDSCAPE EDITION)
 -- DEVELOPED BY HANZ - OPTIMIZED FOR MOBILE LANDSCAPE & PC
 -- ==============================================================================
 
@@ -24,7 +24,7 @@ ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = PlayerGui
 
 -- ==============================================================================
--- LOADING SCREEN OVERLAY (BY HANZ)
+-- FAST LOADING OVERLAY (BY HANZ)
 -- ==============================================================================
 local LoadingOverlay = Instance.new("Frame")
 LoadingOverlay.Name = "LoadingOverlay"
@@ -39,8 +39,8 @@ LoadingCorner.CornerRadius = UDim.new(0, 12)
 LoadingCorner.Parent = LoadingOverlay
 
 local LoadingLabel = Instance.new("TextLabel")
-LoadingLabel.Size = UDim2.new(0, 400, 0, 50)
-LoadingLabel.Position = UDim2.new(0.5, -200, 0.5, -35)
+LoadingLabel.Size = UDim2.new(0, 400, 0, 40)
+LoadingLabel.Position = UDim2.new(0.5, -200, 0.5, -30)
 LoadingLabel.BackgroundTransparency = 1
 LoadingLabel.Text = "MEMUAT R6 ULTIMATE MANAGER..."
 LoadingLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -50,10 +50,10 @@ LoadingLabel.ZIndex = 11
 LoadingLabel.Parent = LoadingOverlay
 
 local CreditLabel = Instance.new("TextLabel")
-CreditLabel.Size = UDim2.new(0, 400, 0, 30)
+CreditLabel.Size = UDim2.new(0, 400, 0, 25)
 CreditLabel.Position = UDim2.new(0.5, -200, 0.5, 10)
 CreditLabel.BackgroundTransparency = 1
-CreditLabel.Text = "CREATED BY HANZ"
+CreditLabel.Text = "BY HANZ"
 CreditLabel.TextColor3 = Color3.fromRGB(80, 255, 120)
 CreditLabel.TextSize = 12
 CreditLabel.Font = Enum.Font.GothamSemibold
@@ -125,7 +125,7 @@ ContentFrame.BackgroundTransparency = 1
 ContentFrame.Parent = MainFrame
 
 -- ==============================================================================
--- LANDSCAPE SPLIT LAYOUT: LEFT COLUMN (CATALOG & PRESETS)
+-- LANDSCAPE SPLIT LAYOUT: LEFT COLUMN
 -- ==============================================================================
 local LeftColumn = Instance.new("Frame")
 LeftColumn.Name = "LeftColumn"
@@ -134,10 +134,9 @@ LeftColumn.Position = UDim2.new(0, 8, 0, 5)
 LeftColumn.BackgroundTransparency = 1
 LeftColumn.Parent = ContentFrame
 
--- Official Catalog Section
 local CatalogHeader = Instance.new("TextLabel")
 CatalogHeader.Size = UDim2.new(1, 0, 0, 15)
-CatalogHeader.BackgroundTransparency = "1"
+CatalogHeader.BackgroundTransparency = 1
 CatalogHeader.Text = "--- KATALOG RESMI (KLIK) ---"
 CatalogHeader.TextColor3 = Color3.fromRGB(180, 180, 200)
 CatalogHeader.TextSize = 9
@@ -159,7 +158,6 @@ CatalogUIList.SortOrder = Enum.SortOrder.LayoutOrder
 CatalogUIList.Padding = UDim.new(0, 2)
 CatalogUIList.Parent = CatalogScroll
 
--- Preset Section
 local PresetHeader = Instance.new("TextLabel")
 PresetHeader.Size = UDim2.new(1, 0, 0, 15)
 PresetHeader.Position = UDim2.new(0, 0, 0, 128)
@@ -186,7 +184,7 @@ PresetUIList.Padding = UDim.new(0, 2)
 PresetUIList.Parent = PresetScroll
 
 -- ==============================================================================
--- LANDSCAPE SPLIT LAYOUT: RIGHT COLUMN (CONTROLS & ADJUSTMENTS)
+-- LANDSCAPE SPLIT LAYOUT: RIGHT COLUMN
 -- ==============================================================================
 local RightColumn = Instance.new("Frame")
 RightColumn.Name = "RightColumn"
@@ -195,7 +193,6 @@ RightColumn.Position = UDim2.new(0, 285, 0, 5)
 RightColumn.BackgroundTransparency = 1
 RightColumn.Parent = ContentFrame
 
--- Headless Toggle
 local HeadlessBtn = Instance.new("TextButton")
 HeadlessBtn.Size = UDim2.new(1, 0, 0, 22)
 HeadlessBtn.Position = UDim2.new(0, 0, 0, 0)
@@ -212,7 +209,6 @@ local CornerHeadless = Instance.new("UICorner")
 CornerHeadless.CornerRadius = UDim.new(0, 4)
 CornerHeadless.Parent = HeadlessBtn
 
--- Manual ID Input & Load
 local IdTextBox = Instance.new("TextBox")
 IdTextBox.Size = UDim2.new(0.68, 0, 0, 22)
 IdTextBox.Position = UDim2.new(0, 0, 0, 26)
@@ -247,7 +243,6 @@ local CornerLoad = Instance.new("UICorner")
 CornerLoad.CornerRadius = UDim.new(0, 4)
 CornerLoad.Parent = AddAccessoryBtn
 
--- Preset Name Input & Save Set Button
 local PresetNameBox = Instance.new("TextBox")
 PresetNameBox.Size = UDim2.new(0.68, 0, 0, 22)
 PresetNameBox.Position = UDim2.new(0, 0, 0, 52)
@@ -282,7 +277,6 @@ local CornerSave = Instance.new("UICorner")
 CornerSave.CornerRadius = UDim.new(0, 4)
 CornerSave.Parent = SavePresetBtn
 
--- Status Label & Navigation
 local AccStatusLabel = Instance.new("TextLabel")
 AccStatusLabel.Size = UDim2.new(1, 0, 0, 20)
 AccStatusLabel.Position = UDim2.new(0, 0, 0, 78)
@@ -331,7 +325,6 @@ local CornerNext = Instance.new("UICorner")
 CornerNext.CornerRadius = UDim.new(0, 4)
 CornerNext.Parent = NextAccBtn
 
--- Position & Scale Matrix Buttons
 local function createAdjButton(posX, posY, sizeX, sizeY, text, color)
     local btn = Instance.new("TextButton")
     btn.Size = sizeX
@@ -403,14 +396,13 @@ MinimizeBtn.MouseButton1Click:Connect(function()
 end)
 
 -- ==============================================================================
--- LOGIC ENGINE: CATALOG & ASSET MANAGEMENT
+-- LOGIC ENGINE
 -- ==============================================================================
 local HeadlessActive = false
 local activeAccessories = {}
 local savedPresets = {}
 local selectedIndex = 0
 
--- Official Roblox Catalog Asset IDs (Verified & Correct)
 local officialCatalogItems = {
     {name = "8-Bit Royal Crown", id = 10159600649},
     {name = "8-Bit HP Bar", id = 10159610478},
@@ -496,7 +488,7 @@ local function spawnAccessoryWithData(assetId, c0Table, scaleTable)
                     if scaleTable and item:IsA("MeshPart") then
                         item.Size = Vector3.new(table.unpack(scaleTable))
                     end
-                    table.insert(activeAccessories, {id = tostring(assetId), model = item, part = item, weld = weld})
+                                        table.insert(activeAccessories, {id = tostring(assetId), model = item, part = item, weld = weld})
                 elseif item:IsA("Model") then
                     for _, child in pairs(item:GetChildren()) do
                         if child:IsA("Accessory") or child:IsA("Hat") then
@@ -822,18 +814,6 @@ end)
 loadPresetsFromDisk()
 refreshCatalogUI()
 
--- Loading screen sequence animation
-task.spawn(function()
-    task.wait(1.5)
-    local tweenInfo = TweenInfo.new(0.5, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    local tween1 = TweenService:Create(LoadingOverlay, tweenInfo, {BackgroundTransparency = 1})
-    local tween2 = TweenService:Create(LoadingLabel, tweenInfo, {TextTransparency = 1})
-    local tween3 = TweenService:Create(CreditLabel, tweenInfo, {TextTransparency = 1})
-    tween1:Play()
-    tween2:Play()
-    tween3:Play()
-    tween1.Completed:Connect(function()
-        LoadingOverlay:Destroy()
-        MainFrame.Visible = true
-    end)
-end)
+-- INSTANT DISPLAY REMOVING LOADING SCREEN
+LoadingOverlay:Destroy()
+MainFrame.Visible = true
