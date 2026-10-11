@@ -1,13 +1,12 @@
 -- ==============================================================================
--- R6 ULTIMATE ACCESSORY MANAGER & PRESET OUTFIT SYSTEM (FAST LANDSCAPE EDITION)
--- DEVELOPED BY HANZ - OPTIMIZED FOR MOBILE LANDSCAPE & PC
+-- R6 ULTIMATE ACCESSORY MANAGER & PRESET OUTFIT SYSTEM (LANDSCAPE EDITION)
+-- DEVELOPED BY HANZ - NO LOADING SCREEN, INSTANT DISPLAY
 -- ==============================================================================
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
 local InsertService = game:GetService("InsertService")
 local HttpService = game:GetService("HttpService")
-local TweenService = game:GetService("TweenService")
 
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
@@ -24,43 +23,6 @@ ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = PlayerGui
 
 -- ==============================================================================
--- FAST LOADING OVERLAY (BY HANZ)
--- ==============================================================================
-local LoadingOverlay = Instance.new("Frame")
-LoadingOverlay.Name = "LoadingOverlay"
-LoadingOverlay.Size = UDim2.new(1, 0, 1, 0)
-LoadingOverlay.BackgroundColor3 = Color3.fromRGB(10, 10, 14)
-LoadingOverlay.BorderSizePixel = 0
-LoadingOverlay.ZIndex = 10
-LoadingOverlay.Parent = ScreenGui
-
-local LoadingCorner = Instance.new("UICorner")
-LoadingCorner.CornerRadius = UDim.new(0, 12)
-LoadingCorner.Parent = LoadingOverlay
-
-local LoadingLabel = Instance.new("TextLabel")
-LoadingLabel.Size = UDim2.new(0, 400, 0, 40)
-LoadingLabel.Position = UDim2.new(0.5, -200, 0.5, -30)
-LoadingLabel.BackgroundTransparency = 1
-LoadingLabel.Text = "MEMUAT R6 ULTIMATE MANAGER..."
-LoadingLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-LoadingLabel.TextSize = 14
-LoadingLabel.Font = Enum.Font.GothamBold
-LoadingLabel.ZIndex = 11
-LoadingLabel.Parent = LoadingOverlay
-
-local CreditLabel = Instance.new("TextLabel")
-CreditLabel.Size = UDim2.new(0, 400, 0, 25)
-CreditLabel.Position = UDim2.new(0.5, -200, 0.5, 10)
-CreditLabel.BackgroundTransparency = 1
-CreditLabel.Text = "BY HANZ"
-CreditLabel.TextColor3 = Color3.fromRGB(80, 255, 120)
-CreditLabel.TextSize = 12
-CreditLabel.Font = Enum.Font.GothamSemibold
-CreditLabel.ZIndex = 11
-CreditLabel.Parent = LoadingOverlay
-
--- ==============================================================================
 -- MAIN LANDSCAPE FRAME
 -- ==============================================================================
 local MainFrame = Instance.new("Frame")
@@ -72,7 +34,7 @@ MainFrame.BorderColor3 = Color3.fromRGB(60, 120, 255)
 MainFrame.BorderSizePixel = 1
 MainFrame.Active = true
 MainFrame.ClipsDescendants = true
-MainFrame.Visible = false
+MainFrame.Visible = true
 MainFrame.Parent = ScreenGui
 
 local MainCorner = Instance.new("UICorner")
@@ -488,7 +450,7 @@ local function spawnAccessoryWithData(assetId, c0Table, scaleTable)
                     if scaleTable and item:IsA("MeshPart") then
                         item.Size = Vector3.new(table.unpack(scaleTable))
                     end
-                                        table.insert(activeAccessories, {id = tostring(assetId), model = item, part = item, weld = weld})
+                    table.insert(activeAccessories, {id = tostring(assetId), model = item, part = item, weld = weld})
                 elseif item:IsA("Model") then
                     for _, child in pairs(item:GetChildren()) do
                         if child:IsA("Accessory") or child:IsA("Hat") then
@@ -813,7 +775,3 @@ end)
 
 loadPresetsFromDisk()
 refreshCatalogUI()
-
--- INSTANT DISPLAY REMOVING LOADING SCREEN
-LoadingOverlay:Destroy()
-MainFrame.Visible = true
