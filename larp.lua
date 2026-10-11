@@ -1,7 +1,7 @@
--- ==============================================================================
--- R6 ULTIMATE ACCESSORY MANAGER & PRESET OUTFIT SYSTEM (LANDSCAPE EDITION)
--- DEVELOPED BY HANZ - NO LOADING SCREEN, INSTANT DISPLAY
--- ==============================================================================
+-- =========================================================
+-- R6 ULTIMATE ACCESSORY MANAGER GUI (LANDSCAPE MOBILE READY)
+-- CREATED BY HANZ
+-- =========================================================
 
 local Players = game:GetService("Players")
 local UserInputService = game:GetService("UserInputService")
@@ -11,61 +11,59 @@ local HttpService = game:GetService("HttpService")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
-if PlayerGui:FindFirstChild("UltimateAccessoryGuiLandscape") then
-    PlayerGui.UltimateAccessoryGuiLandscape:Destroy()
+if PlayerGui:FindFirstChild("HanzAccessoryGui") then
+    PlayerGui.HanzAccessoryGui:Destroy()
 end
 
-local PRESET_FILE_NAME = "R6_LandscapePresets.json"
+local PRESET_FILE_NAME = "R6_AccessoryPresets_Hanz.json"
 
 local ScreenGui = Instance.new("ScreenGui")
-ScreenGui.Name = "UltimateAccessoryGuiLandscape"
+ScreenGui.Name = "HanzAccessoryGui"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = PlayerGui
 
--- ==============================================================================
--- MAIN LANDSCAPE FRAME
--- ==============================================================================
+-- Main Frame (Landscape Layout Optimized for Mobile)
 local MainFrame = Instance.new("Frame")
 MainFrame.Name = "MainFrame"
-MainFrame.Size = UDim2.new(0, 560, 0, 280)
-MainFrame.Position = UDim2.new(0.5, -280, 0.5, -140)
+MainFrame.Size = UDim2.new(0, 520, 0, 260)
+MainFrame.Position = UDim2.new(0.5, -260, 0.5, -130)
 MainFrame.BackgroundColor3 = Color3.fromRGB(15, 15, 20)
 MainFrame.BorderColor3 = Color3.fromRGB(60, 120, 255)
 MainFrame.BorderSizePixel = 1
 MainFrame.Active = true
 MainFrame.ClipsDescendants = true
-MainFrame.Visible = true
 MainFrame.Parent = ScreenGui
 
 local MainCorner = Instance.new("UICorner")
-MainCorner.CornerRadius = UDim.new(0, 10)
+MainCorner.CornerRadius = UDim.new(0, 8)
 MainCorner.Parent = MainFrame
 
+-- Title Bar
 local TitleBar = Instance.new("Frame")
 TitleBar.Name = "TitleBar"
-TitleBar.Size = UDim2.new(1, 0, 0, 30)
+TitleBar.Size = UDim2.new(1, 0, 0, 28)
 TitleBar.BackgroundColor3 = Color3.fromRGB(22, 22, 30)
 TitleBar.BorderSizePixel = 0
 TitleBar.Parent = MainFrame
 
 local TitleCorner = Instance.new("UICorner")
-TitleCorner.CornerRadius = UDim.new(0, 10)
+TitleCorner.CornerRadius = UDim.new(0, 8)
 TitleCorner.Parent = TitleBar
 
 local TitleLabel = Instance.new("TextLabel")
-TitleLabel.Size = UDim2.new(1, -40, 1, 0)
-TitleLabel.Position = UDim2.new(0, 12, 0, 0)
+TitleLabel.Size = UDim2.new(1, -35, 1, 0)
+TitleLabel.Position = UDim2.new(0, 10, 0, 0)
 TitleLabel.BackgroundTransparency = 1
-TitleLabel.Text = "R6 ULTIMATE MANAGER | BY HANZ"
-TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+TitleLabel.Text = "R6 MANAGER - BY HANZ"
+TitleLabel.TextColor3 = Color3.fromRGB(80, 255, 120)
 TitleLabel.TextSize = 11
 TitleLabel.Font = Enum.Font.GothamBold
 TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 TitleLabel.Parent = TitleBar
 
 local MinimizeBtn = Instance.new("TextButton")
-MinimizeBtn.Size = UDim2.new(0, 24, 0, 24)
-MinimizeBtn.Position = UDim2.new(1, -28, 0, 3)
+MinimizeBtn.Size = UDim2.new(0, 22, 0, 22)
+MinimizeBtn.Position = UDim2.new(1, -26, 0, 3)
 MinimizeBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
 MinimizeBtn.BorderColor3 = Color3.fromRGB(70, 130, 255)
 MinimizeBtn.BorderSizePixel = 1
@@ -76,87 +74,33 @@ MinimizeBtn.Font = Enum.Font.GothamBold
 MinimizeBtn.Parent = TitleBar
 
 local MinCorner = Instance.new("UICorner")
-MinCorner.CornerRadius = UDim.new(0, 6)
+MinCorner.CornerRadius = UDim.new(0, 5)
 MinCorner.Parent = MinimizeBtn
 
 local ContentFrame = Instance.new("Frame")
 ContentFrame.Name = "ContentFrame"
-ContentFrame.Size = UDim2.new(1, 0, 1, -30)
-ContentFrame.Position = UDim2.new(0, 0, 0, 30)
+ContentFrame.Size = UDim2.new(1, 0, 1, -28)
+ContentFrame.Position = UDim2.new(0, 0, 0, 28)
 ContentFrame.BackgroundTransparency = 1
 ContentFrame.Parent = MainFrame
 
--- ==============================================================================
--- LANDSCAPE SPLIT LAYOUT: LEFT COLUMN
--- ==============================================================================
-local LeftColumn = Instance.new("Frame")
-LeftColumn.Name = "LeftColumn"
-LeftColumn.Size = UDim2.new(0, 265, 1, -10)
-LeftColumn.Position = UDim2.new(0, 8, 0, 5)
-LeftColumn.BackgroundTransparency = 1
-LeftColumn.Parent = ContentFrame
+-- Left Column Frame (Catalog & Headless Toggle)
+local LeftCol = Instance.new("Frame")
+LeftCol.Size = UDim2.new(0.48, 0, 0.95, 0)
+LeftCol.Position = UDim2.new(0.015, 0, 0.025, 0)
+LeftCol.BackgroundTransparency = 1
+LeftCol.Parent = ContentFrame
 
-local CatalogHeader = Instance.new("TextLabel")
-CatalogHeader.Size = UDim2.new(1, 0, 0, 15)
-CatalogHeader.BackgroundTransparency = 1
-CatalogHeader.Text = "--- KATALOG RESMI (KLIK) ---"
-CatalogHeader.TextColor3 = Color3.fromRGB(180, 180, 200)
-CatalogHeader.TextSize = 9
-CatalogHeader.Font = Enum.Font.GothamBold
-CatalogHeader.Parent = LeftColumn
+-- Right Column Frame (Controls, Presets & Manual Input)
+local RightCol = Instance.new("Frame")
+RightCol.Size = UDim2.new(0.48, 0, 0.95, 0)
+RightCol.Position = UDim2.new(0.505, 0, 0.025, 0)
+RightCol.BackgroundTransparency = 1
+RightCol.Parent = ContentFrame
 
-local CatalogScroll = Instance.new("ScrollingFrame")
-CatalogScroll.Size = UDim2.new(1, 0, 0, 105)
-CatalogScroll.Position = UDim2.new(0, 0, 0, 18)
-CatalogScroll.BackgroundColor3 = Color3.fromRGB(10, 10, 14)
-CatalogScroll.BorderColor3 = Color3.fromRGB(40, 40, 60)
-CatalogScroll.BorderSizePixel = 1
-CatalogScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-CatalogScroll.ScrollBarThickness = 3
-CatalogScroll.Parent = LeftColumn
-
-local CatalogUIList = Instance.new("UIListLayout")
-CatalogUIList.SortOrder = Enum.SortOrder.LayoutOrder
-CatalogUIList.Padding = UDim.new(0, 2)
-CatalogUIList.Parent = CatalogScroll
-
-local PresetHeader = Instance.new("TextLabel")
-PresetHeader.Size = UDim2.new(1, 0, 0, 15)
-PresetHeader.Position = UDim2.new(0, 0, 0, 128)
-PresetHeader.BackgroundTransparency = 1
-PresetHeader.Text = "--- PRESET OUTFIT LOKAL ---"
-PresetHeader.TextColor3 = Color3.fromRGB(180, 180, 200)
-PresetHeader.TextSize = 9
-PresetHeader.Font = Enum.Font.GothamBold
-PresetHeader.Parent = LeftColumn
-
-local PresetScroll = Instance.new("ScrollingFrame")
-PresetScroll.Size = UDim2.new(1, 0, 0, 75)
-PresetScroll.Position = UDim2.new(0, 0, 0, 146)
-PresetScroll.BackgroundColor3 = Color3.fromRGB(10, 10, 14)
-PresetScroll.BorderColor3 = Color3.fromRGB(40, 40, 60)
-PresetScroll.BorderSizePixel = 1
-PresetScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
-PresetScroll.ScrollBarThickness = 3
-PresetScroll.Parent = LeftColumn
-
-local PresetUIList = Instance.new("UIListLayout")
-PresetUIList.SortOrder = Enum.SortOrder.LayoutOrder
-PresetUIList.Padding = UDim.new(0, 2)
-PresetUIList.Parent = PresetScroll
-
--- ==============================================================================
--- LANDSCAPE SPLIT LAYOUT: RIGHT COLUMN
--- ==============================================================================
-local RightColumn = Instance.new("Frame")
-RightColumn.Name = "RightColumn"
-RightColumn.Size = UDim2.new(0, 265, 1, -10)
-RightColumn.Position = UDim2.new(0, 285, 0, 5)
-RightColumn.BackgroundTransparency = 1
-RightColumn.Parent = ContentFrame
-
+-- Headless Toggle (Left Col Top)
 local HeadlessBtn = Instance.new("TextButton")
-HeadlessBtn.Size = UDim2.new(1, 0, 0, 22)
+HeadlessBtn.Size = UDim2.new(1, 0, 0, 24)
 HeadlessBtn.Position = UDim2.new(0, 0, 0, 0)
 HeadlessBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 HeadlessBtn.BorderColor3 = Color3.fromRGB(60, 120, 255)
@@ -165,15 +109,42 @@ HeadlessBtn.Text = "HEADLESS: OFF"
 HeadlessBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
 HeadlessBtn.TextSize = 10
 HeadlessBtn.Font = Enum.Font.GothamSemibold
-HeadlessBtn.Parent = RightColumn
+HeadlessBtn.Parent = LeftCol
 
-local CornerHeadless = Instance.new("UICorner")
-CornerHeadless.CornerRadius = UDim.new(0, 4)
-CornerHeadless.Parent = HeadlessBtn
+local Corner1 = Instance.new("UICorner")
+Corner1.CornerRadius = UDim.new(0, 5)
+Corner1.Parent = HeadlessBtn
 
+-- Official Catalog Section
+local CatalogHeader = Instance.new("TextLabel")
+CatalogHeader.Size = UDim2.new(1, 0, 0, 18)
+CatalogHeader.Position = UDim2.new(0, 0, 0, 30)
+CatalogHeader.BackgroundTransparency = 1
+CatalogHeader.Text = "--- KATALOG OFFICIAL EFEK (ROBLOX) ---"
+CatalogHeader.TextColor3 = Color3.fromRGB(180, 180, 200)
+CatalogHeader.TextSize = 9
+CatalogHeader.Font = Enum.Font.GothamBold
+CatalogHeader.Parent = LeftCol
+
+local CatalogScroll = Instance.new("ScrollingFrame")
+CatalogScroll.Size = UDim2.new(1, 0, 1, -52)
+CatalogScroll.Position = UDim2.new(0, 0, 0, 52)
+CatalogScroll.BackgroundColor3 = Color3.fromRGB(10, 10, 14)
+CatalogScroll.BorderColor3 = Color3.fromRGB(40, 40, 60)
+CatalogScroll.BorderSizePixel = 1
+CatalogScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+CatalogScroll.ScrollBarThickness = 4
+CatalogScroll.Parent = LeftCol
+
+local CatalogUIList = Instance.new("UIListLayout")
+CatalogUIList.SortOrder = Enum.SortOrder.LayoutOrder
+CatalogUIList.Padding = UDim.new(0, 3)
+CatalogUIList.Parent = CatalogScroll
+
+-- Manual Load Input (Right Col)
 local IdTextBox = Instance.new("TextBox")
-IdTextBox.Size = UDim2.new(0.68, 0, 0, 22)
-IdTextBox.Position = UDim2.new(0, 0, 0, 26)
+IdTextBox.Size = UDim2.new(0.65, 0, 0, 22)
+IdTextBox.Position = UDim2.new(0, 0, 0, 0)
 IdTextBox.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
 IdTextBox.BorderColor3 = Color3.fromRGB(80, 80, 110)
 IdTextBox.BorderSizePixel = 1
@@ -183,31 +154,32 @@ IdTextBox.Text = ""
 IdTextBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 IdTextBox.TextSize = 10
 IdTextBox.Font = Enum.Font.GothamMedium
-IdTextBox.Parent = RightColumn
+IdTextBox.Parent = RightCol
 
-local CornerId = Instance.new("UICorner")
-CornerId.CornerRadius = UDim.new(0, 4)
-CornerId.Parent = IdTextBox
+local Corner3 = Instance.new("UICorner")
+Corner3.CornerRadius = UDim.new(0, 5)
+Corner3.Parent = IdTextBox
 
 local AddAccessoryBtn = Instance.new("TextButton")
-AddAccessoryBtn.Size = UDim2.new(0.29, 0, 0, 22)
-AddAccessoryBtn.Position = UDim2.new(0.71, 0, 0, 26)
+AddAccessoryBtn.Size = UDim2.new(0.32, 0, 0, 22)
+AddAccessoryBtn.Position = UDim2.new(0.68, 0, 0, 0)
 AddAccessoryBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 AddAccessoryBtn.BorderColor3 = Color3.fromRGB(60, 120, 255)
 AddAccessoryBtn.BorderSizePixel = 1
-AddAccessoryBtn.Text = "LOAD"
+AddAccessoryBtn.Text = "LOAD ACC"
 AddAccessoryBtn.TextColor3 = Color3.fromRGB(80, 255, 120)
-AddAccessoryBtn.TextSize = 10
+AddAccessoryBtn.TextSize = 9
 AddAccessoryBtn.Font = Enum.Font.GothamBold
-AddAccessoryBtn.Parent = RightColumn
+AddAccessoryBtn.Parent = RightCol
 
-local CornerLoad = Instance.new("UICorner")
-CornerLoad.CornerRadius = UDim.new(0, 4)
-CornerLoad.Parent = AddAccessoryBtn
+local Corner4 = Instance.new("UICorner")
+Corner4.CornerRadius = UDim.new(0, 5)
+Corner4.Parent = AddAccessoryBtn
 
+-- Preset Outfit Section (Right Col)
 local PresetNameBox = Instance.new("TextBox")
-PresetNameBox.Size = UDim2.new(0.68, 0, 0, 22)
-PresetNameBox.Position = UDim2.new(0, 0, 0, 52)
+PresetNameBox.Size = UDim2.new(0.65, 0, 0, 22)
+PresetNameBox.Position = UDim2.new(0, 0, 0, 26)
 PresetNameBox.BackgroundColor3 = Color3.fromRGB(10, 10, 15)
 PresetNameBox.BorderColor3 = Color3.fromRGB(80, 80, 110)
 PresetNameBox.BorderSizePixel = 1
@@ -217,47 +189,73 @@ PresetNameBox.Text = ""
 PresetNameBox.TextColor3 = Color3.fromRGB(255, 255, 255)
 PresetNameBox.TextSize = 10
 PresetNameBox.Font = Enum.Font.GothamMedium
-PresetNameBox.Parent = RightColumn
+PresetNameBox.Parent = RightCol
 
-local CornerPresetBox = Instance.new("UICorner")
-CornerPresetBox.CornerRadius = UDim.new(0, 4)
-CornerPresetBox.Parent = PresetNameBox
+local PresetCorner = Instance.new("UICorner")
+PresetCorner.CornerRadius = UDim.new(0, 5)
+PresetCorner.Parent = PresetNameBox
 
 local SavePresetBtn = Instance.new("TextButton")
-SavePresetBtn.Size = UDim2.new(0.29, 0, 0, 22)
-SavePresetBtn.Position = UDim2.new(0.71, 0, 0, 52)
+SavePresetBtn.Size = UDim2.new(0.32, 0, 0, 22)
+SavePresetBtn.Position = UDim2.new(0.68, 0, 0, 26)
 SavePresetBtn.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
 SavePresetBtn.BorderColor3 = Color3.fromRGB(80, 255, 120)
 SavePresetBtn.BorderSizePixel = 1
-SavePresetBtn.Text = "SIMPAN"
+SavePresetBtn.Text = "SIMPAN SET"
 SavePresetBtn.TextColor3 = Color3.fromRGB(80, 255, 120)
-SavePresetBtn.TextSize = 10
+SavePresetBtn.TextSize = 9
 SavePresetBtn.Font = Enum.Font.GothamBold
-SavePresetBtn.Parent = RightColumn
+SavePresetBtn.Parent = RightCol
 
-local CornerSave = Instance.new("UICorner")
-CornerSave.CornerRadius = UDim.new(0, 4)
-CornerSave.Parent = SavePresetBtn
+local SavePCorner = Instance.new("UICorner")
+SavePCorner.CornerRadius = UDim.new(0, 5)
+SavePCorner.Parent = SavePresetBtn
+
+local PresetScroll = Instance.new("ScrollingFrame")
+PresetScroll.Size = UDim2.new(1, 0, 0, 50)
+PresetScroll.Position = UDim2.new(0, 0, 0, 52)
+PresetScroll.BackgroundColor3 = Color3.fromRGB(10, 10, 14)
+PresetScroll.BorderColor3 = Color3.fromRGB(40, 40, 60)
+PresetScroll.BorderSizePixel = 1
+PresetScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+PresetScroll.ScrollBarThickness = 3
+PresetScroll.Parent = RightCol
+
+local UIList = Instance.new("UIListLayout")
+UIList.SortOrder = Enum.SortOrder.LayoutOrder
+UIList.Padding = UDim.new(0, 2)
+UIList.Parent = PresetScroll
+
+-- Position & Scale Control Panel (Right Col Bottom)
+local AdjusterHeader = Instance.new("TextLabel")
+AdjusterHeader.Size = UDim2.new(1, 0, 0, 16)
+AdjusterHeader.Position = UDim2.new(0, 0, 0, 106)
+AdjusterHeader.BackgroundTransparency = 1
+AdjusterHeader.Text = "--- POSISI & UKURAN (R6) ---"
+AdjusterHeader.TextColor3 = Color3.fromRGB(180, 180, 200)
+AdjusterHeader.TextSize = 9
+AdjusterHeader.Font = Enum.Font.GothamBold
+AdjusterHeader.Parent = RightCol
 
 local AccStatusLabel = Instance.new("TextLabel")
-AccStatusLabel.Size = UDim2.new(1, 0, 0, 20)
-AccStatusLabel.Position = UDim2.new(0, 0, 0, 78)
+AccStatusLabel.Size = UDim2.new(1, 0, 0, 18)
+AccStatusLabel.Position = UDim2.new(0, 0, 0, 124)
 AccStatusLabel.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
 AccStatusLabel.BorderColor3 = Color3.fromRGB(50, 50, 70)
 AccStatusLabel.BorderSizePixel = 1
 AccStatusLabel.Text = "Aktif: [ Belum dipilih ]"
 AccStatusLabel.TextColor3 = Color3.fromRGB(255, 220, 100)
-AccStatusLabel.TextSize = 10
+AccStatusLabel.TextSize = 9
 AccStatusLabel.Font = Enum.Font.GothamMedium
-AccStatusLabel.Parent = RightColumn
+AccStatusLabel.Parent = RightCol
 
-local CornerStatus = Instance.new("UICorner")
-CornerStatus.CornerRadius = UDim.new(0, 4)
-CornerStatus.Parent = AccStatusLabel
+local StatusCorner = Instance.new("UICorner")
+StatusCorner.CornerRadius = UDim.new(0, 4)
+StatusCorner.Parent = AccStatusLabel
 
 local PrevAccBtn = Instance.new("TextButton")
 PrevAccBtn.Size = UDim2.new(0.48, 0, 0, 20)
-PrevAccBtn.Position = UDim2.new(0, 0, 0, 102)
+PrevAccBtn.Position = UDim2.new(0, 0, 0, 145)
 PrevAccBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
 PrevAccBtn.BorderColor3 = Color3.fromRGB(70, 130, 255)
 PrevAccBtn.BorderSizePixel = 1
@@ -265,15 +263,15 @@ PrevAccBtn.Text = "< PREV ACC"
 PrevAccBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 PrevAccBtn.TextSize = 9
 PrevAccBtn.Font = Enum.Font.GothamBold
-PrevAccBtn.Parent = RightColumn
+PrevAccBtn.Parent = RightCol
 
-local CornerPrev = Instance.new("UICorner")
-CornerPrev.CornerRadius = UDim.new(0, 4)
-CornerPrev.Parent = PrevAccBtn
+local PrevCorner = Instance.new("UICorner")
+PrevCorner.CornerRadius = UDim.new(0, 4)
+PrevCorner.Parent = PrevAccBtn
 
 local NextAccBtn = Instance.new("TextButton")
 NextAccBtn.Size = UDim2.new(0.48, 0, 0, 20)
-NextAccBtn.Position = UDim2.new(0.52, 0, 0, 102)
+NextAccBtn.Position = UDim2.new(0.52, 0, 0, 145)
 NextAccBtn.BackgroundColor3 = Color3.fromRGB(30, 30, 42)
 NextAccBtn.BorderColor3 = Color3.fromRGB(70, 130, 255)
 NextAccBtn.BorderSizePixel = 1
@@ -281,16 +279,16 @@ NextAccBtn.Text = "NEXT ACC >"
 NextAccBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 NextAccBtn.TextSize = 9
 NextAccBtn.Font = Enum.Font.GothamBold
-NextAccBtn.Parent = RightColumn
+NextAccBtn.Parent = RightCol
 
-local CornerNext = Instance.new("UICorner")
-CornerNext.CornerRadius = UDim.new(0, 4)
-CornerNext.Parent = NextAccBtn
+local NextCorner = Instance.new("UICorner")
+NextCorner.CornerRadius = UDim.new(0, 4)
+NextCorner.Parent = NextAccBtn
 
-local function createAdjButton(posX, posY, sizeX, sizeY, text, color)
+local function createAdjButton(posX, posY, text, color)
     local btn = Instance.new("TextButton")
-    btn.Size = sizeX
-    btn.Position = posX
+    btn.Size = UDim2.new(0.31, 0, 0, 20)
+    btn.Position = UDim2.new(posX, 0, 0, posY)
     btn.BackgroundColor3 = Color3.fromRGB(25, 25, 35)
     btn.BorderColor3 = color
     btn.BorderSizePixel = 1
@@ -298,28 +296,40 @@ local function createAdjButton(posX, posY, sizeX, sizeY, text, color)
     btn.TextColor3 = color
     btn.TextSize = 9
     btn.Font = Enum.Font.GothamBold
-    btn.Parent = RightColumn
+    btn.Parent = RightCol
     local c = Instance.new("UICorner")
     c.CornerRadius = UDim.new(0, 4)
     c.Parent = btn
     return btn
 end
 
-local XPlusBtn = createAdjButton(UDim2.new(0, 0, 0, 126), UDim2.new(0, 0, 0, 20), UDim2.new(0.31, 0, 0, 20), "X +0.1", Color3.fromRGB(100, 200, 255))
-local XMinBtn  = createAdjButton(UDim2.new(0.34, 0, 0, 126), UDim2.new(0, 0, 0, 20), UDim2.new(0.31, 0, 0, 20), "X -0.1", Color3.fromRGB(100, 200, 255))
-local ScaleUpBtn = createAdjButton(UDim2.new(0.68, 0, 0, 126), UDim2.new(0, 0, 0, 20), UDim2.new(0.32, 0, 0, 20), "SCALE +", Color3.fromRGB(255, 100, 255))
+local XPlusBtn = createAdjButton(0, 168, "X +0.1", Color3.fromRGB(100, 200, 255))
+local XMinBtn  = createAdjButton(0.34, 168, "X -0.1", Color3.fromRGB(100, 200, 255))
+local YPlusBtn = createAdjButton(0, 191, "Y +0.1", Color3.fromRGB(80, 255, 120))
+local YMinBtn  = createAdjButton(0.34, 191, "Y -0.1", Color3.fromRGB(80, 255, 120))
+local ZPlusBtn = createAdjButton(0, 214, "Z +0.1", Color3.fromRGB(255, 180, 80))
+local ZMinBtn  = createAdjButton(0.34, 214, "Z -0.1", Color3.fromRGB(255, 180, 80))
 
-local YPlusBtn = createAdjButton(UDim2.new(0, 0, 0, 149), UDim2.new(0, 0, 0, 20), UDim2.new(0.31, 0, 0, 20), "Y +0.1", Color3.fromRGB(80, 255, 120))
-local YMinBtn  = createAdjButton(UDim2.new(0.34, 0, 0, 149), UDim2.new(0, 0, 0, 20), UDim2.new(0.31, 0, 0, 20), "Y -0.1", Color3.fromRGB(80, 255, 120))
-local ScaleDownBtn = createAdjButton(UDim2.new(0.68, 0, 0, 149), UDim2.new(0, 0, 0, 20), UDim2.new(0.32, 0, 0, 20), "SCALE -", Color3.fromRGB(255, 100, 255))
+local ScaleUpBtn   = createAdjButton(0.68, 168, "SCALE +", Color3.fromRGB(255, 100, 255))
+local ScaleDownBtn = createAdjButton(0.68, 191, "SCALE -", Color3.fromRGB(255, 100, 255))
 
-local ZPlusBtn = createAdjButton(UDim2.new(0, 0, 0, 172), UDim2.new(0, 0, 0, 20), UDim2.new(0.31, 0, 0, 20), "Z +0.1", Color3.fromRGB(255, 180, 80))
-local ZMinBtn  = createAdjButton(UDim2.new(0.34, 0, 0, 172), UDim2.new(0, 0, 0, 20), UDim2.new(0.31, 0, 0, 20), "Z -0.1", Color3.fromRGB(255, 180, 80))
-local DeleteAccBtn = createAdjButton(UDim2.new(0.68, 0, 0, 172), UDim2.new(0, 0, 0, 20), UDim2.new(0.32, 0, 0, 20), "HAPUS", Color3.fromRGB(255, 60, 60))
+local DeleteAccBtn = Instance.new("TextButton")
+DeleteAccBtn.Size = UDim2.new(0.31, 0, 0, 20)
+DeleteAccBtn.Position = UDim2.new(0.68, 0, 0, 214)
+DeleteAccBtn.BackgroundColor3 = Color3.fromRGB(40, 20, 20)
+DeleteAccBtn.BorderColor3 = Color3.fromRGB(255, 60, 60)
+DeleteAccBtn.BorderSizePixel = 1
+DeleteAccBtn.Text = "HAPUS"
+DeleteAccBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
+DeleteAccBtn.TextSize = 9
+DeleteAccBtn.Font = Enum.Font.GothamBold
+DeleteAccBtn.Parent = RightCol
 
--- ==============================================================================
--- DRAGGING & MINIMIZE CONTROLLER
--- ==============================================================================
+local DelCorner = Instance.new("UICorner")
+DelCorner.CornerRadius = UDim.new(0, 4)
+DelCorner.Parent = DeleteAccBtn
+
+-- Touch & Mouse Dragging Controller
 local dragging, dragInput, dragStart, startPos
 TitleBar.InputBegan:Connect(function(input)
     if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
@@ -348,24 +358,26 @@ MinimizeBtn.MouseButton1Click:Connect(function()
     isMinimized = not isMinimized
     if isMinimized then
         ContentFrame.Visible = false
-        MainFrame.Size = UDim2.new(0, 560, 0, 30)
+        MainFrame.Size = UDim2.new(0, 520, 0, 28)
         MinimizeBtn.Text = "+"
     else
         ContentFrame.Visible = true
-        MainFrame.Size = UDim2.new(0, 560, 0, 280)
+        MainFrame.Size = UDim2.new(0, 520, 0, 260)
         MinimizeBtn.Text = "-"
     end
 end)
 
--- ==============================================================================
--- LOGIC ENGINE
--- ==============================================================================
+-- =========================================================
+-- LOGIC ENGINE: PRESETS, PERSISTENCE & CATALOG
+-- =========================================================
+
 local HeadlessActive = false
 local activeAccessories = {}
 local savedPresets = {}
 local selectedIndex = 0
 
-local officialCatalogItems = {
+-- Official Roblox Catalog Items with Effects & Verified Asset IDs
+local officialEffectItems = {
     {name = "8-Bit Royal Crown", id = 10159600649},
     {name = "8-Bit HP Bar", id = 10159610478},
     {name = "8-Bit Tabby Cat", id = 10159617728},
@@ -507,7 +519,7 @@ local function refreshPresetListUI()
     for presetName, presetData in pairs(savedPresets) do
         count = count + 1
         local itemFrame = Instance.new("Frame")
-        itemFrame.Size = UDim2.new(1, -6, 0, 22)
+        itemFrame.itemFrame.Size = UDim2.new(1, -6, 0, 22)
         itemFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 28)
         itemFrame.BorderSizePixel = 0
         itemFrame.Parent = PresetScroll
@@ -521,7 +533,7 @@ local function refreshPresetListUI()
         loadBtn.BackgroundTransparency = 1
         loadBtn.Text = "  " .. presetName
         loadBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-        loadBtn.TextSize = 10
+        loadBtn.TextSize = 9
         loadBtn.Font = Enum.Font.GothamMedium
         loadBtn.TextXAlignment = Enum.TextXAlignment.Left
         loadBtn.Parent = itemFrame
@@ -540,7 +552,7 @@ local function refreshPresetListUI()
         delBtn.BorderSizePixel = 0
         delBtn.Text = "HAPUS"
         delBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
-        delBtn.TextSize = 9
+        delBtn.TextSize = 8
         delBtn.Font = Enum.Font.GothamBold
         delBtn.Parent = itemFrame
 
@@ -564,7 +576,7 @@ local function refreshCatalogUI()
     end
 
     local count = 0
-    for _, item in ipairs(officialCatalogItems) do
+    for _, item in ipairs(officialEffectItems) do
         count = count + 1
         local itemFrame = Instance.new("Frame")
         itemFrame.Size = UDim2.new(1, -6, 0, 22)
@@ -581,7 +593,7 @@ local function refreshCatalogUI()
         loadBtn.BackgroundTransparency = 1
         loadBtn.Text = "  " .. item.name
         loadBtn.TextColor3 = Color3.fromRGB(255, 220, 100)
-        loadBtn.TextSize = 10
+        loadBtn.TextSize = 9
         loadBtn.Font = Enum.Font.GothamMedium
         loadBtn.TextXAlignment = Enum.TextXAlignment.Left
         loadBtn.Parent = itemFrame
@@ -591,7 +603,7 @@ local function refreshCatalogUI()
         end)
     end
 
-    CatalogScroll.CanvasSize = UDim2.new(0, 0, 0, count * 24)
+    CatalogScroll.CanvasSize = UDim2.new(0, 0, 0, count * 25)
 end
 
 local function loadPresetsFromDisk()
@@ -743,6 +755,7 @@ DeleteAccBtn.MouseButton1Click:Connect(function()
     end
 end)
 
+-- Persistent Auto-Reapply System on Respawn / Reset
 LocalPlayer.CharacterAdded:Connect(function(newChar)
     task.wait(1.2)
     if HeadlessActive then
